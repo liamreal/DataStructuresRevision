@@ -247,7 +247,7 @@ def find_shortest_path():
     edge_list = [(1, 2), (2, 3), (3, 4), (3, 5), (4, 6), (6, 7),
                  (2, 8), (8, 9), (9, 4)]
 
-    # CREATE directional graph, add edges from our list
+    # CREATE graph, add edges from our list
     graph = nx.Graph()
     graph.add_edges_from(edge_list)
 
@@ -278,6 +278,116 @@ def find_shortest_path():
 
     # first lets show how it draws normally using spring
     nx.draw_planar(graph, with_labels=True)
+    plt.show()
+
+def find_centrality():
+    # can also add edges as a list of tuples
+    edge_list = [(1, 2), (2, 3), (3, 4), (3, 5), (4, 6), (6, 7),
+                 (2, 8), (8, 9), (9, 4)]
+
+    # CREATE graph, add edges from our list
+    graph = nx.Graph()
+    graph.add_edges_from(edge_list)
+
+    # Degree Centrality takes the degree of the node (how many other nodes it is connected to)
+    # as the most important, so higher degree would imply higher Degree Centrality for that node
+    print(f'\nDegree Centrality for each node: \n\t{nx.degree_centrality(graph)}')
+
+    # Closeness Centrality relies on the average distance from this node to all other nodes,
+    # so first looks at distance to all other nodes, then divides it by the number of other nodes
+    # to get the average distance
+    # For example say you have a graph like this (where 0 is a node in graph, X is the node with
+    # highest closeness centrality, Y is node with highest degree):
+    #              0
+    #              |
+    #     0--X-----Y-------0--------0------0
+    #        |     |
+    #        |     |
+    #        |     0
+    #        0
+    # Despite node Y having highest degree, X is higher in closeness centrality BECAUSE if you
+    # look at average distance to all other nodes, X is one average closer to the rest
+    print(f'\nCloseness Centrality for each node: \n\t{nx.closeness_centrality(graph)}')
+
+    # Eigenvector Centrality also takes into consideration importance of nodes, so it cares about
+    # how connected it is to other nodes BUT ALSO the quality of other nodes, because if it is
+    # connected to a lot of unimportant nodes, still not an important node, but if a node is
+    # connected to fewer nodes but they are more important, would be more important so should
+    # have higher centrality
+    print(f'\nEigenvector Centrality for each node: \n\t{nx.eigenvector_centrality(graph)}')
+
+    # Betweenness Centrality means the percentage of shortest paths that run through a particular
+    # node, or in simpler terms, how much % of shortest paths run through a node, so how many of
+    # those optimal/important shortest paths run through a node to use the shortest path
+    print(f'\nBetweenness Centrality for each node: \n\t{nx.betweenness_centrality(graph)}')
+
+    # first lets show how it draws normally using spring
+    nx.draw_planar(graph, with_labels=True)
+    plt.show()
+
+def show_betweenness_centrality():
+    # CREATE graphs
+    graph_one = nx.complete_graph(5)
+    graph_two = nx.complete_graph(5)
+
+    # relabelling nodes based specified by our dictionary (key is node name, remapped to value)
+    graph_two = nx.relabel_nodes(graph_two, {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E'})
+
+    # X will be the bridge connecting our two graphs
+    graph_connector = nx.from_edgelist([(4, 'X'), ('X', 'A')])
+
+    # from a full graph from the previous 3 created so we end up with:
+    #
+    #          (rest of graph_one)-4--------X--------A-(rest of graph_two)
+    graph = nx.compose_all([graph_one, graph_two, graph_connector])
+
+    # This is the graph we now have:
+    #
+    #      2 1           B C
+    #       \|           |/
+    #     3--0-----X-----A--D
+    #        |           |
+    #        4           E
+    #
+    # We can compare the degree centrality to betweenness centrality to see that, although nodes
+    # 0 and A have highest degree centrality, X has the highest betweenness centrality because
+    # it is a bridge that connects both graphs, and is the only bridge between them
+    print(f'\nDegree Centrality for each node: \n\t{nx.degree_centrality(graph)}')
+    print(f'\nBetweenness Centrality for each node: \n\t{nx.betweenness_centrality(graph)}')
+
+    # first lets show how it draws normally using spring
+    nx.draw_spring(graph, with_labels=True)
+    plt.show()
+
+def get_density_and_diameter():
+    # CREATE one graph (same one used in show_betweenness_centrality function)
+    graph_one = nx.complete_graph(5)
+    graph_two = nx.complete_graph(5)
+    graph_two = nx.relabel_nodes(graph_two, {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E'})
+    graph_connector = nx.from_edgelist([(4, 'X'), ('X', 'A')])
+    graph = nx.compose_all([graph_one, graph_two, graph_connector])
+
+    # Density means how many edges we have in our graph divided by how many edges we COULD have
+    # if we were to connect every node to every other node, making the graph complete
+    # i.e.
+    #       density = (total_graph_edges)/(total_possible_edges)
+    # so, for a complete graph, density = 1
+    print(f'\nDensity of example graph: \n\t{nx.density(graph)}')
+    print(f'\nDensity of complete graph: \n\t{nx.density(graph_one)}')
+
+    # Diameter means the longest shortest path, in other words, if we were trying to get from
+    # one end of graph to the furthest point on the other end of the graph, how far away would
+    # it be, assuming we take the optimal path (in this case returns number of edges it has to
+    # cross to get to that other node)
+    #
+    # For a complete graph, diameter = 1 (in number of edges) BECAUSE every node is connected
+    # to every other node, so there is a direct path to the node on opposite end of the graph
+    # if it is complete
+    print(f'\nDiameter of example graph: \n\t{nx.diameter(graph)}')
+    print(f'\nDiameter of complete graph: \n\t{nx.diameter(graph_one)}')
+
+    # first lets show how it draws normally using spring
+    nx.draw_spring(graph, with_labels=True)
     plt.show()
 
 
@@ -320,8 +430,20 @@ if __name__ == "__main__":
     # # can also do the same SPECIFICALLY for directed graphs (in/out degrees)
     # get_directed_graph_degrees()
 
-    # can also do the same SPECIFICALLY for directed graphs (in/out degrees)
-    find_shortest_path()
+    # # can also do the same SPECIFICALLY for directed graphs (in/out degrees)
+    # find_shortest_path()
 
-    # can also find shortest path
-    # WIP
+    # # sometimes we want to know how central a node is in the graph, can decide in different ways
+    # # (all the different centralities used are explained through comments within the function)
+    # find_centrality()
+
+    # # to show betweenness centrality a bit better, will showcase in its own function
+    # show_betweenness_centrality()
+
+    # can obtain density and diameter of graph
+    get_density_and_diameter()
+
+
+
+
+
