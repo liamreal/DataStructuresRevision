@@ -2,6 +2,8 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 
+#
+
 # TO UPDATE TCL NOT FOUND ERROR, go to ENVIRONMENT VARIABLES AND UPDATE PATH TO NEW ONE FOR:
 #       TCL_LIBRARY
 #       TK_LIBRARY
@@ -9,6 +11,11 @@ import numpy as np
 # place so i made a symbolic link
 
 '''
+Course from:
+    NeuralNine
+on:
+    https://www.youtube.com/watch?v=VetBkjcm9Go&t=1162s
+
 Data Types:
     G = nx.Graph()  # undirected graph (edges go both ways)
     D = nx.DiGraph() # directed graph (one-way)
@@ -235,6 +242,45 @@ def get_directed_graph_degrees():
     nx.draw_spring(graph, with_labels=True)
     plt.show()
 
+def find_shortest_path():
+    # can also add edges as a list of tuples
+    edge_list = [(1, 2), (2, 3), (3, 4), (3, 5), (4, 6), (6, 7),
+                 (2, 8), (8, 9), (9, 4)]
+
+    # CREATE directional graph, add edges from our list
+    graph = nx.Graph()
+    graph.add_edges_from(edge_list)
+
+    # find shortest path in graph from node 2 to 4 in graph
+    # (returns a list of nodes to get to 4)
+    print(f'\nShortest path from node 2 to node 4: \n\t{nx.shortest_path(graph, 2, 4)}')
+
+    # first lets show how it draws normally using spring
+    nx.draw_planar(graph, with_labels=True)
+    plt.show()
+
+    # result above was:
+    #   [2, 3, 4]
+    # so if we removed node 3 by omitting the edge (2, 3) in our edge list, would result in:
+    #   [2, 8, 9, 4]
+    # as seen in next graph
+
+    # can also add edges as a list of tuples
+    edge_list_two = [(1, 2), (3, 4), (3, 5), (4, 6), (6, 7),
+                 (2, 8), (8, 9), (9, 4)]
+    # CREATE directional graph, add edges from our list
+    graph = nx.Graph()
+    graph.add_edges_from(edge_list_two)
+
+    # find shortest path in graph from node 2 to 4 in graph
+    # (returns a list of nodes to get to 4)
+    print(f'\nShortest path from node 2 to node 4 \n(after removing the edge connecting node 2 and 3): \n\t{nx.shortest_path(graph, 2, 4)}')
+
+    # first lets show how it draws normally using spring
+    nx.draw_planar(graph, with_labels=True)
+    plt.show()
+
+
 if __name__ == "__main__":
     # # function gives simple overview of basic functionality of NetworkX
     # simple_overview()
@@ -271,8 +317,11 @@ if __name__ == "__main__":
     # # we can get specific information about our graph
     # get_graph_degrees()
 
+    # # can also do the same SPECIFICALLY for directed graphs (in/out degrees)
+    # get_directed_graph_degrees()
+
     # can also do the same SPECIFICALLY for directed graphs (in/out degrees)
-    get_directed_graph_degrees()
+    find_shortest_path()
 
     # can also find shortest path
     # WIP
