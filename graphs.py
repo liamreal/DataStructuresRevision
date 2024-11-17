@@ -390,6 +390,26 @@ def get_density_and_diameter():
     nx.draw_spring(graph, with_labels=True)
     plt.show()
 
+def find_eulerian_path():
+    # CREATE one graph (same one used in show_betweenness_centrality function)
+    graph_one = nx.complete_graph(5)
+    graph_two = nx.complete_graph(5)
+    graph_two = nx.relabel_nodes(graph_two, {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E'})
+    graph_connector = nx.from_edgelist([(4, 'X'), ('X', 'A')])
+    graph = nx.compose_all([graph_one, graph_two, graph_connector])
+
+    # Eulerian Path is the path of nodes in order to visit every edge EXACTLY once, CAN revisit
+    # vertices (i.e. nodes), but CANNOT pass through edges already passed through, meaning does
+    # not exist for every graph
+    path_graph = list(nx.eulerian_path(graph))
+    path_graph_one = list(nx.eulerian_path(graph_one))
+    print(f'\nEulerian Path of example graph: \n\t{path_graph}')
+    print(f'\nEulerian Path of complete graph: \n\t{path_graph_one}')
+
+    # first lets show how it draws normally using spring
+    nx.draw_spring(graph, with_labels=True)
+    plt.show()
+
 
 if __name__ == "__main__":
     # # function gives simple overview of basic functionality of NetworkX
@@ -440,8 +460,11 @@ if __name__ == "__main__":
     # # to show betweenness centrality a bit better, will showcase in its own function
     # show_betweenness_centrality()
 
-    # can obtain density and diameter of graph
-    get_density_and_diameter()
+    # # can obtain density and diameter of graph
+    # get_density_and_diameter()
+
+    # can find the Eulerian path (explained in function), only visit each edge ONCE (if possible)
+    find_eulerian_path()
 
 
 
