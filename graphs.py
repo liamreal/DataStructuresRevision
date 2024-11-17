@@ -555,7 +555,7 @@ def find_directionally_connected_components():
     nx.draw_spring(graph_updated, with_labels=True)
     plt.show()
 
-def program_loop():
+def graphs_loop():
     run = True
     user_input = -1
 
@@ -590,10 +590,10 @@ def program_loop():
         print('\nPress \'e\' to exit program')
 
         # loop while user has not picked valid number or chosen to exit program
-        while (user_input not in range(1, 21)) or (user_input != 'E'.lower()):
+        while (user_input not in range(1, 21)) or (user_input != 'e'):
             user_input = input('\nChoose an input from list: ')
 
-            if (user_input.lower() == 'e'):
+            if user_input.lower() == 'e':
                 run = False
                 break
             else:
@@ -670,7 +670,7 @@ def program_loop():
                     # can find strong/weak connected components of directed graphs
                     find_directionally_connected_components()
                 case _:
-                    print('Invalid number entered')
+                    print('Invalid number')
                     break
             # this is to allow user to see results before continuing back to main menu, but do not need store input
             input('\n--Press any key to continue to main menu--')
@@ -680,7 +680,7 @@ def program_loop():
 
 if __name__ == "__main__":
     # entire program
-    program_loop()
+    graphs_loop()
 
     print('END OF MAIN')
 
