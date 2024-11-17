@@ -4,8 +4,6 @@ import numpy as np
 import os
 
 
-#
-
 # TO UPDATE TCL NOT FOUND ERROR, go to ENVIRONMENT VARIABLES AND UPDATE PATH TO NEW ONE FOR:
 #       TCL_LIBRARY
 #       TK_LIBRARY
@@ -679,46 +677,6 @@ def program_loop():
             # reset user input and break out of this loop to get back to main menu loop
             user_input = -1
             break
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 if __name__ == "__main__":
     # entire program
