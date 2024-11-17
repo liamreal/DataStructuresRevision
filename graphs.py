@@ -546,6 +546,18 @@ def find_directionally_connected_components():
     # also fit criteria for weak
     print(f'\nWeakly Connected Components of updated graph: \n\t{list(nx.weakly_connected_components(graph_updated))}')
 
+    # however, if we added edges from C to A and B, they would become strongly connected
+    graph_updated_more = nx.compose_all([graph])
+    graph_updated_more.remove_edge('B', 'A')
+    graph_updated_more.add_edge('C', 'D')
+    graph_updated_more.add_edge('B', 'C')
+
+    # getting connected components for updated graph
+    print(f'\nStrongly Connected Components of updated graph: \n\t{list(nx.strongly_connected_components(graph_updated_more))}')
+    # you will see that, since all our connected components fit criteria for strong, they
+    # also fit criteria for weak
+    print(f'\nWeakly Connected Components of updated graph: \n\t{list(nx.weakly_connected_components(graph_updated_more))}')
+
 
     # first lets show how it draws normally using spring
     nx.draw_spring(graph, with_labels=True)
@@ -553,6 +565,10 @@ def find_directionally_connected_components():
 
     # first lets show how it draws normally using spring
     nx.draw_spring(graph_updated, with_labels=True)
+    plt.show()
+
+    # first lets show how it draws normally using spring
+    nx.draw_spring(graph_updated_more, with_labels=True)
     plt.show()
 
 def graphs_loop():
